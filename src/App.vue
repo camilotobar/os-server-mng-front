@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-content>
-      <Header @environmentChanged="environmentChanged" @killProcess="killProcess"></Header>
+      <Header @environmentChanged="environmentChanged" @killProcess="killProcess" :performance="performance"></Header>
     </v-content>
     <Processes
       ref="pro"
@@ -25,7 +25,8 @@ export default {
   },
   data: () => ({
     currentEnvironment: localStorage.getItem("envir"),
-    processes: []
+    processes: [],
+      performance: null,
   }),
   mounted() {
     this.environmentChanged("Linux");
@@ -42,6 +43,7 @@ export default {
             this.processes = performance.processeswin;
           } else {
             this.processes = performance.processes;
+            this.performance = response.data;
           }
         });
     },
@@ -56,9 +58,16 @@ export default {
             this.processes = performance.processeswin;
           } else {
             this.processes = performance.processes;
+              this.performance = response.data;
           }
         });
     }
   }
 };
 </script>
+
+<style>
+    h1, h2 {
+        color: #004479 !important;
+    }
+</style>
