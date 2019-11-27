@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-content>
-            <Header @environmentChanged="environmentChanged" @killProcess="killProcess"></Header>
+            <Header @environmentChanged="environmentChanged" @killProcess="killProcess" :performance="performance"></Header>
         </v-content>
         <Processes :processes="processes"></Processes>
     </v-app>
@@ -21,6 +21,7 @@
         data: () => ({
             currentEnvironment: '',
             processes: [],
+            performance: null,
         }),
         mounted() {
             this.environmentChanged('Linux');
@@ -29,14 +30,14 @@
             environmentChanged(environment) {
                 this.currentEnvironment = environment;
                 axios.get(`http://localhost:8080/performanceOn${environment}`).then((response) => {
-                  let performance = response.data;
-                  this.processes = performance.processes;
+                  this.performance = response.data;
+                  this.processes = response.data.processes;
                 });
             },
             killProcess(pid) {
                 axios.get(`http://localhost:8080/killOn${this.currentEnvironment}?pid=${pid}`).then((response) => {
-                  let performance = response.data;
-                  this.processes = performance.processes;
+                  this.performance = response.data;
+                  this.processes = response.data.processes;
                 });
             },
         }
