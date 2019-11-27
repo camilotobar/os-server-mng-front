@@ -1,28 +1,44 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <v-app>
+        <v-content>
+            <Header @environmentChanged="environmentChanged" @killProcess="killProcess"></Header>
+        </v-content>
+        <Processes :processes="processes"></Processes>
+    </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+    import axios from 'axios';
+    import Header from "./components/Header";
+    import Processes from "./components/Processes";
 
-export default {
-  name: 'app',
-  components: {
-    HelloWorld
-  }
-}
+    export default {
+        name: 'App',
+        components: {
+            Processes,
+            Header
+        },
+        data: () => ({
+            currentEnvironment: '',
+            processes: [],
+        }),
+        mounted() {
+            this.environmentChanged('Linux');
+        },
+        methods: {
+            environmentChanged(environment) {
+                this.currentEnvironment = environment;
+                axios.get(`http://localhost:8080/performanceOn${environment}`).then((response) => {
+                  let performance = response.data;
+                  this.processes = performance.processes;
+                });
+            },
+            killProcess(pid) {
+                axios.get(`http://localhost:8080/killOn${this.currentEnvironment}?pid=${pid}`).then((response) => {
+                  let performance = response.data;
+                  this.processes = performance.processes;
+                });
+            },
+        }
+    };
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
