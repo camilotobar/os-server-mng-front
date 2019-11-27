@@ -35,7 +35,7 @@ export default {
         { text: "memoryUsedPercentage", value: "memoryUsedPercentage" },
         { text: "time", value: "time" },
         { text: "command", value: "command" },
-        { text: "actions", value: "action", sortable: false }
+        { text: "", value: "action", sortable: false }
       ];
       if (
         this.environment !== null &&
@@ -52,7 +52,7 @@ export default {
           { text: "VM", value: "vm" },
           { text: "SI", value: "si" },
           { text: "CPU", value: "cpu" },
-          { text: "actions", value: "action", sortable: false }
+          { text: "", value: "action", sortable: false }
         ];
       }
       return headers;

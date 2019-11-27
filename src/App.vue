@@ -3,7 +3,12 @@
     <v-content>
       <Header @environmentChanged="environmentChanged" @killProcess="killProcess"></Header>
     </v-content>
-    <Processes ref="pro" :processes="processes" :environment="currentEnvironment" @killProcess="killProcess"></Processes>
+    <Processes
+      ref="pro"
+      :processes="processes"
+      :environment="currentEnvironment"
+      @killProcess="killProcess"
+    ></Processes>
   </v-app>
 </template>
 
@@ -28,7 +33,7 @@ export default {
   methods: {
     environmentChanged(environment) {
       this.currentEnvironment = environment;
-      localStorage.setItem("envir", environment)
+      localStorage.setItem("envir", environment);
       axios
         .get(`http://localhost:8080/performanceOn${environment}`)
         .then(response => {
@@ -47,7 +52,11 @@ export default {
         )
         .then(response => {
           let performance = response.data;
-          this.processes = performance.processes;
+          if (this.currentEnvironment === "Windows") {
+            this.processes = performance.processeswin;
+          } else {
+            this.processes = performance.processes;
+          }
         });
     }
   }
